@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Conversion Floor — Solbakken Research Initiative</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-rule: #1a1a1a;
+      --text-primary: #e8e4dc;
+      --text-secondary: #8a8480;
+      --text-dim: #4a4744;
+      --accent: #c4a882;
+      --accent-cold: #7a9eb8;
+      --accent-warn: #b87a7a;
+      --border: #222220;
+      --border-accent: #3a3530;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    .container {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    header {
+      padding: 72px 0 0;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .header-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 32px;
+    }
+
+    .header-label span { color: var(--accent); }
+
+    h1 {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 300;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(14px, 2.5vw, 17px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      line-height: 1.4;
+    }
+
+    .header-rule {
+      width: 100%;
+      height: 1px;
+      background: var(--border-accent);
+      margin-bottom: 36px;
+      position: relative;
+    }
+
+    .header-rule::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 60px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .thesis {
+      background: var(--bg-card);
+      border: 1px solid var(--border-accent);
+      border-left: 3px solid var(--accent);
+      padding: 24px 28px;
+      margin-bottom: 52px;
+      animation: fadeUp 0.8s 0.15s ease both;
+    }
+
+    .thesis-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .thesis p {
+      font-family: 'Newsreader', serif;
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    section {
+      margin-bottom: 52px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    section:nth-child(2) { animation-delay: 0.1s; }
+    section:nth-child(3) { animation-delay: 0.2s; }
+    section:nth-child(4) { animation-delay: 0.3s; }
+    section:nth-child(5) { animation-delay: 0.4s; }
+
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      font-size: 14.5px;
+    }
+
+    p strong {
+      color: var(--text-primary);
+      font-weight: 400;
+    }
+
+    .equation {
+      background: var(--bg-rule);
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--accent-cold);
+      letter-spacing: 0.02em;
+      overflow-x: auto;
+    }
+
+    .download-block {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent);
+      color: #0a0a0a;
+      text-decoration: none;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 12px 22px;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: var(--text-primary);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 12px 22px;
+      border: 1px solid var(--border-accent);
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Placement grid (Lightmatter / Q.ANT) */
+    .placement-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .placement-item {
+      background: var(--bg-card);
+      padding: 18px 20px;
+    }
+
+    .placement-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .placement-axes {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text-primary);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .placement-axes span {
+      color: var(--text-dim);
+    }
+
+    .placement-tax {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .status-item {
+      background: var(--bg-card);
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-key {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    .status-val {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+    }
+
+    .status-val.no { color: var(--text-dim); }
+    .status-val.open { color: var(--accent); }
+    .status-val.partial { color: var(--accent-cold); }
+    .status-val.named { color: var(--accent-warn); }
+
+    .unknown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .unknown-item {
+      background: var(--bg-card);
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 16px;
+      transition: background 0.15s;
+    }
+
+    .unknown-item:hover { background: var(--bg-rule); }
+
+    .unknown-id {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      padding-top: 2px;
+    }
+
+    .unknown-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .unknown-text strong {
+      color: var(--text-primary);
+      font-weight: 400;
+      display: block;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    .unknown-flag {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      margin-top: 6px;
+    }
+
+    .unknown-flag.theory { background: rgba(122,158,184,0.15); color: var(--accent-cold); }
+    .unknown-flag.empirical { background: rgba(184,122,122,0.15); color: var(--accent-warn); }
+    .unknown-flag.open { background: rgba(196,168,130,0.12); color: var(--accent); }
+
+    .boundary-block {
+      border: 1px solid var(--border-accent);
+      border-left: 3px solid var(--accent-warn);
+      background: var(--bg-card);
+      padding: 22px 26px;
+      margin: 20px 0;
+    }
+
+    .boundary-block p {
+      margin-bottom: 8px;
+      font-size: 13.5px;
+    }
+
+    .boundary-block p:last-child { margin-bottom: 0; }
+
+    .citation {
+      background: var(--bg-rule);
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 0 52px;
+      margin-top: 20px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-left {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      line-height: 1.8;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-left a {
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-left a:hover { color: var(--accent); }
+
+    .footer-right {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+      text-align: right;
+    }
+
+    .footer-right a {
+      color: var(--accent);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.15s;
+    }
+
+    .footer-right a:hover { opacity: 1; }
+
+    /* Linked repo card (used for Mortal Token + Paper 4) */
+    .repo-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 16px 18px;
+      text-decoration: none;
+      transition: border-color 0.2s;
+      margin-bottom: 10px;
+    }
+
+    .repo-link:hover { border-color: var(--accent); }
+
+    .repo-link-arrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 16px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .repo-link-text { flex: 1; }
+
+    .repo-link-title {
+      font-family: 'Newsreader', serif;
+      font-size: 14px;
+      color: var(--text-primary);
+      font-style: italic;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .repo-link-sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 560px) {
+      .status-grid { grid-template-columns: 1fr; }
+      .placement-grid { grid-template-columns: 1fr; }
+      .unknown-item { grid-template-columns: 70px 1fr; }
+      .footer-inner { flex-direction: column; }
+      .footer-right { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="header-label">
+      <span>Solbakken Research Initiative</span> &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; Preprint
+    </div>
+    <h1>The Conversion Floor</h1>
+    <p class="subtitle">Tokens, Modal Tokens, and the Two-Source Noise Condition for Photonic AI Acceleration</p>
+    <div class="header-rule"></div>
+
+    <div class="download-block">
+      <a href="./conversion_floor_v11.pdf" class="btn-primary">
+        ↓ &nbsp; Download v11 PDF
+      </a>
+      <a href="https://github.com/bluebflatminor/conversion-floor" class="btn-secondary">
+        ↗ &nbsp; GitHub Repository
+      </a>
+    </div>
+  </header>
+
+  <!-- ── Thesis ── -->
+  <div class="thesis">
+    <div class="thesis-label">Thesis</div>
+    <p>
+      The discrete token is a hardware artifact of electronic accelerators, not a principled
+      unit of meaning. Architectural pressure is already relocating discreteness from the
+      computational core to the system boundary. Photonic matrix-vector multiplication is a
+      candidate substrate for the hybrid primitive this trajectory requires — the modal token —
+      but its viability is gated by a two-dimensional noise condition defined by weight memory
+      stability (δₘ) and modulation noise (σ_mod) as physically distinct axes.
+    </p>
+  </div>
+
+  <!-- ── Core argument ── -->
+  <section>
+    <div class="section-label">The core argument</div>
+    <h2>Two Noise Sources, One Floor</h2>
+    <p>
+      Under the simplest separable noise model, the ADC precision requirement <em>b</em> for a
+      photonic MVM system satisfies a two-axis constraint — not one. Weight memory drift and
+      modulation noise are physically distinct and independently variable, and the Goldilocks
+      window where photonic MVM delivers net efficiency gain is bounded on both axes
+      simultaneously.
+    </p>
+    <div class="equation">b ≥ max( f(δₘ), g(σ_mod) )</div>
+    <p>
+      Appendix A of the paper derives this as the worst-case approximation of a full SNR
+      constraint under separability. The γ cross-term in the variance decomposition captures
+      the grain-boundary coupling between the two axes in the ferroelectric-graphene stack —
+      a structural consequence of the shared interface, absent in TFLN and silicon-photonic
+      architectures.
+    </p>
+    <p>
+      A secondary consequence is the <strong>phase-fragile similarity regime</strong>: for
+      interference-based similarity, σ_mod does not merely set a floor for numerical precision.
+      It sets a floor for semantic fidelity. Near a destructive-interference condition, small
+      phase errors produce step-function flips in similarity value, not gradual degradation.
+    </p>
+  </section>
+
+  <!-- ── §3.4 Placements ── -->
+  <section>
+    <div class="section-label">§3.4 — Back-of-envelope</div>
+    <h2>Placements on the Two-Axis Map</h2>
+    <p>
+      The new contribution in v11 is a first back-of-envelope placement of two deployed
+      commercial systems on the (δₘ, σ_mod) map, using only public specifications and
+      published noise literature. Error bars are a factor of 3–10; the purpose is structure,
+      not precision.
+    </p>
+
+    <div class="placement-grid">
+      <div class="placement-item">
+        <div class="placement-name">Lightmatter Envise</div>
+        <div class="placement-axes">
+          δₘ: <strong>high</strong><br>
+          σ_mod: <span>low</span>
+        </div>
+        <div class="placement-tax">
+          Silicon photonics, thermo-optic MZI weights. Tax paid through run-time analog gain
+          control — an ongoing operational cost.
+        </div>
+      </div>
+      <div class="placement-item">
+        <div class="placement-name">Q.ANT NPS</div>
+        <div class="placement-axes">
+          δₘ: <span>low</span><br>
+          σ_mod: <strong>moderate</strong>
+        </div>
+        <div class="placement-tax">
+          TFLN eliminates thermal crosstalk; binding constraint shifts to TCCR noise. Tax paid
+          through post-fabrication annealing — a one-time investment.
+        </div>
+      </div>
+    </div>
+
+    <p>
+      Neither system appears, from public data, to be operating natively inside the Goldilocks
+      window without compensation. Both are paying a conversion floor tax; the tax takes
+      different structural forms depending on substrate choice. This is precisely what
+      Unknown Seven asks about, and it is now testably approximate rather than merely
+      conceptually located.
+    </p>
+  </section>
+
+  <!-- ── Scope ── -->
+  <section>
+    <div class="section-label">Scope</div>
+    <h2>What the Framework Does and Does Not Claim</h2>
+    <div class="boundary-block">
+      <p><strong>Claims:</strong> a two-dimensional noise envelope, derivable from SNR, with published-data anchors on both axes.</p>
+      <p><strong>Does not claim:</strong> the modal token is formally specified, implemented, or demonstrated.</p>
+      <p><strong>Does not claim:</strong> either placement in §3.4 is inside or outside the Goldilocks window with certainty. The placements are structural, not numerical.</p>
+      <p><strong>Does not claim:</strong> Unknown One-A (interference-based similarity complexity advantage) is resolved.</p>
+    </div>
+    <p>
+      The eight named unknowns collected in §8 of the paper are themselves a contribution:
+      precision about where the framework ends and speculation begins. The most important
+      empirical question is whether any deployed photonic MVM system operates inside the
+      Goldilocks window without compensation. The most important theoretical question is
+      whether a softmax-equivalent normalization exists for interference-based similarity
+      without reintroducing O(n²) cost.
+    </p>
+  </section>
+
+  <!-- ── Status ── -->
+  <section>
+    <div class="section-label">Current state</div>
+    <h2>Status</h2>
+    <div class="status-grid">
+      <div class="status-item">
+        <span class="status-key">Modal token formalized</span>
+        <span class="status-val partial">Minimal (Appendix A)</span>
+      </div>
+      <div class="status-item">
+        <span class="status-key">Modal token implemented</span>
+        <span class="status-val no">No</span>
+      </div>
+      <div class="status-item">
+        <span class="status-key">Conversion floor derivation</span>
+        <span class="status-val partial">SNR worst-case bound</span>
+      </div>
+      <div class="status-item">
+        <span class="status-key">f(δₘ), g(σ_mod) forms</span>
+        <span class="status-val named">Unknown Two</span>
+      </div>
+      <div class="status-item">
+        <span class="status-key">§3.4 placements</span>
+        <span class="status-val partial">Order-of-magnitude</span>
+      </div>
+      <div class="status-item">
+        <span class="status-key">Goldilocks occupancy</span>
+        <span class="status-val open">Unknown Seven</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Named Unknowns ── -->
+  <section>
+    <div class="section-label">Open questions</div>
+    <h2>Named Unknowns</h2>
+    <div class="unknown-list">
+
+      <div class="unknown-item">
+        <div class="unknown-id">One</div>
+        <div class="unknown-text">
+          <strong>Formal specification of the modal token</strong>
+          Appendix A provides a minimal instantiation sufficient to derive the conversion
+          floor and expose phase-sensitive failure modes. State space geometry, operator
+          algebra, observable structure, and full complexity properties remain unspecified.
+          <span class="unknown-flag theory">Theoretical</span>
+        </div>
+      </div>
+
+      <div class="unknown-item">
+        <div class="unknown-id">One-A</div>
+        <div class="unknown-text">
+          <strong>Computational advantage of interference-based similarity</strong>
+          The most important theoretical open question. Whether the interference integral
+          offers asymptotic or constant-factor advantage over O(n²) attention is undemonstrated.
+          The hard sub-problem is softmax-equivalent normalization without reintroducing
+          quadratic cost. Speculative candidate: optical gain saturation.
+          <span class="unknown-flag theory">Theoretical · hardest</span>
+        </div>
+      </div>
+
+      <div class="unknown-item">
+        <div class="unknown-id">Two</div>
+        <div class="unknown-text">
+          <strong>Functional forms of f and g</strong>
+          Physically motivated and order-of-magnitude anchored by §3.4 placements,
+          but not formally derived. Until derived, the conversion floor is approximately
+          located but not numerically bounded with engineering precision.
+          <span class="unknown-flag open">Open</span>
+        </div>
+      </div>
+
+      <div class="unknown-item">
+        <div class="unknown-id">Three</div>
+        <div class="unknown-text">
+          <strong>Binding constraint for Route I</strong>
+          Whether δₘ or σ_mod binds first under operating conditions determines engineering
+          priority. Given phase-fragile similarity, if σ_mod binds the failure mode is
+          semantic collapse rather than precision loss.
+          <span class="unknown-flag open">Open</span>
+        </div>
+      </div>
+
+      <div class="unknown-item">
+        <div class="unknown-id">Four</div>
+        <div class="unknown-text">
+          <strong>Magnitude of noise-source correlation</strong>
+          The γ cross-term captures grain-boundary coupling between axes. Whether this
+          correlation changes effective ADC precision by a small correction or a substantial
+          factor is unknown — no analogue exists in TFLN or silicon photonic systems.
+          <span class="unknown-flag open">Open</span>
+        </div>
+      </div>
+
+      <div class="unknown-item">
+        <div class="unknown-id">Five</div>
+        <div class="unknown-text">
+          <strong>Sufficiency of Raman spectroscopy</strong>
+          Whether Raman at grain boundary sites fully characterizes σ_mod, or whether
+          waveguide surface roughness, thermal phonon-photon coupling, and shot noise
+          contribute at comparable magnitude.
+          <span class="unknown-flag open">Open</span>
+        </div>
+      </div>
+
+      <div class="unknown-item">
+        <div class="unknown-id">Six</div>
+        <div class="unknown-text">
+          <strong>Comparative floor across substrates</strong>
+          A full comparative analysis across silicon photonics, TFLN, graphene-ferroelectric,
+          PCM, and RRAM architectures has not been performed. Whether photonic MVM offers a
+          superior two-dimensional floor profile relative to electronic analog alternatives
+          is not established.
+          <span class="unknown-flag open">Open</span>
+        </div>
+      </div>
+
+      <div class="unknown-item">
+        <div class="unknown-id">Seven</div>
+        <div class="unknown-text">
+          <strong>Does any existing system operate inside the Goldilocks window?</strong>
+          The most important empirical open question. §3.4 suggests the answer is no, not
+          natively: Lightmatter manages δₘ through run-time gain control; Q.ANT manages σ_mod
+          through substrate optimization and annealing. Device-level characterization would
+          resolve the question.
+          <span class="unknown-flag empirical">Empirical · hardest</span>
+        </div>
+      </div>
+
+      <div class="unknown-item">
+        <div class="unknown-id">Eight</div>
+        <div class="unknown-text">
+          <strong>Training dynamics under coupled noise</strong>
+          Gradient behavior under coupled δₘ and σ_mod with phase-SNR constraint,
+          noise accumulation during learning, and convergence before inference becomes
+          useful. Harder than in standard analog compute proposals.
+          <span class="unknown-flag open">Open</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Extensions ── -->
+  <section>
+    <div class="section-label">Downstream</div>
+    <h2>Extensions</h2>
+    <p>
+      The Conversion Floor is the foundational document in an expanding framework. The
+      following extensions introduce further named unknowns and refine specific aspects
+      of the two-axis floor.
+    </p>
+    <a href="https://github.com/bluebflatminor/mortal-token" class="repo-link">
+      <span class="repo-link-arrow">→</span>
+      <span class="repo-link-text">
+        <span class="repo-link-title">The Mortal Token</span>
+        <span class="repo-link-sub">A Coherence-Gated Persistence Filter · Introduces Unknowns Nine–Eleven · April 2026</span>
+      </span>
+    </a>
+    <p style="margin-top: 14px;">
+      <em>Mortal Token</em> proposes temporal self-limitation as a fifth required property of
+      the modal token and extends the conversion floor to a third axis h(m, τ) — the
+      governance tax for operating near the mortality boundary.
+    </p>
+  </section>
+
+  <!-- ── Related ── -->
+  <section>
+    <div class="section-label">Related work</div>
+    <h2>Quantitative Anchor</h2>
+    <p>
+      §6 of the paper references the graphene integration route framework (Routes I, F, J)
+      that provides the Bayesian Monte Carlo joint-probability mapping of the stability
+      envelope for the ferroelectric-graphene architecture.
+    </p>
+    <a href="https://github.com/bluebflatminor/graphene-photonic-memory-routes" class="repo-link">
+      <span class="repo-link-arrow">→</span>
+      <span class="repo-link-text">
+        <span class="repo-link-title">Graphene Integration Route Selection</span>
+        <span class="repo-link-sub">Bayesian Monte Carlo · 10 routes · 64×64 MVM tile · Solbakken Research Initiative</span>
+      </span>
+    </a>
+  </section>
+
+  <!-- ── Citation ── -->
+  <section>
+    <div class="section-label">Attribution</div>
+    <h2>Citation</h2>
+    <div class="citation">Haaland, N. The Conversion Floor: Tokens, Modal Tokens, and the
+Two-Source Noise Condition for Photonic AI Acceleration.
+Solbakken Research Initiative, April 2026.
+github.com/bluebflatminor/conversion-floor</div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-left">
+        Solbakken Research Initiative<br>
+        <a href="mailto:nhaaland@yahoo.com">nhaaland@yahoo.com</a><br>
+        MIT License · April 2026
+      </div>
+      <div class="footer-right">
+        <a href="https://github.com/bluebflatminor">github.com/bluebflatminor</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
